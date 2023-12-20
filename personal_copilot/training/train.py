@@ -44,7 +44,7 @@ def get_args():
 
     parser.add_argument("--seq_length", type=int, default=16384)
     parser.add_argument("--max_steps", type=int, default=-1)
-    parser.add_argument("--num_train_epochs, type=int, default=1)
+    parser.add_argument("--num_train_epochs", type=int, default=1)
     parser.add_argument("--batch_size", type=int, default=1)
     parser.add_argument("--gradient_accumulation_steps", type=int, default=8)
     parser.add_argument("--eos_token_id", type=int, default=32021)
@@ -200,6 +200,8 @@ class ConstantLengthDataset(IterableDataset):
                     "labels": torch.LongTensor(example),
                 }
 
+    def __len__(self):
+        return len(self.dataset)
 
 def create_datasets(tokenizer, args):
     dataset = load_dataset(
@@ -229,7 +231,7 @@ def create_datasets(tokenizer, args):
     train_dataset = ConstantLengthDataset(
         tokenizer,
         train_data,
-        infinite=True,
+        infinite=False,
         seq_length=args.seq_length,
         chars_per_token=chars_per_token,
         content_field=args.data_column,
