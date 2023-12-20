@@ -42,11 +42,12 @@ def get_args():
     parser.add_argument("--shuffle_buffer", type=int, default=5000)
     parser.add_argument("--data_column", type=str, default="content")
 
-    parser.add_argument("--seq_length", type=int, default=8192)
-    parser.add_argument("--max_steps", type=int, default=10000)
-    parser.add_argument("--batch_size", type=int, default=2)
+    parser.add_argument("--seq_length", type=int, default=16384)
+    parser.add_argument("--max_steps", type=int, default=-1)
+    parser.add_argument("--num_train_epochs, type=int, default=1)
+    parser.add_argument("--batch_size", type=int, default=1)
     parser.add_argument("--gradient_accumulation_steps", type=int, default=8)
-    parser.add_argument("--eos_token_id", type=int, default=49152)
+    parser.add_argument("--eos_token_id", type=int, default=32021)
 
     parser.add_argument("--learning_rate", type=float, default=5e-5)
     parser.add_argument("--lr_scheduler_type", type=str, default="cosine")
@@ -332,6 +333,7 @@ def run_training(args, train_data, val_data):
         evaluation_strategy="steps",
         save_strategy=save_strategy,
         max_steps=args.max_steps,
+        num_train_epochs = args.num_train_epochs,
         eval_steps=args.eval_freq,
         save_steps=args.save_freq,
         logging_steps=args.log_freq,
